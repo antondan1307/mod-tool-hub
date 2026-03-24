@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIX LAG PING ADR OB52 OB53 - MOD TOOL HUB</title>
+    <meta name="description" content="MOD TOOL HUB - Fix Lag Ping Free Fire, Data Config, Nhẹ Tâm Headshot">
+    <meta name="theme-color" content="#0f0f0f">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(255, 115, 87, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(138, 43, 226, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(0, 200, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: bgPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* ===== PARTICLES ===== */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 115, 87, 0.4);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            position: relative;
+        }
+
+        .header-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(28px, 6vw, 48px);
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff7357, #ff4081, #7c4dff, #00e5ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            text-shadow: none;
+            letter-spacing: 3px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header-subtitle {
+            color: #888;
+            font-size: 14px;
+            margin-top: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-line {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff7357, #7c4dff);
+            margin: 16px auto 0;
+            border-radius: 2px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 16px 40px;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            text-align: center;
+            margin: 40px 0 20px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(16px, 4vw, 22px);
+            font-weight: 700;
+            color: #fff;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, rgba(255, 115, 87, 0.15), rgba(124, 77, 255, 0.15));
+            border: 1px solid rgba(255, 115, 87, 0.3);
+            border-radius: 12px;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title h2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 115, 87, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: linear-gradient(145deg, rgba(26, 26, 40, 0.9), rgba(15, 15, 25, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff7357, #7c4dff, #00e5ff);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 115, 87, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(255, 115, 87, 0.1);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(15px, 3.5vw, 18px);
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .card-title .badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            background: linear-gradient(135deg, #ff7357, #ff4081);
+            border-radius: 20px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .card-feature {
+            padding: 6px 0;
+            font-size: 14px;
+            color: #c0c0c0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .card-feature .icon {
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+
+        .card-version {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 13px;
+            color: #888;
+        }
+
+        .card-version span {
+            color: #00e5ff;
+            font-weight: 600;
+        }
+
+        /* ===== CARD DESCRIPTION ===== */
+        .card-description {
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            font-size: 13px;
+            color: #999;
+            line-height: 1.7;
+            border-left: 3px solid rgba(255, 115, 87, 0.3);
+        }
+
+        /* ===== MULTI DOWNLOAD BUTTONS ===== */
+        .download-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        /* ===== DOWNLOAD BUTTON ===== */
+        .btn-download {
+            display: block;
+            width: 100%;
+            margin-top: 16px;
+            padding: 14px 24px;
+            text-align: center;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            background: linear-gradient(135deg, #ff7357, #e85d3a);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-download::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(255, 115, 87, 0.4);
+        }
+
+        .btn-download:hover::before {
+            left: 100%;
+        }
+
+        .btn-download:active {
+            transform: translateY(0);
+        }
+
+        .btn-download.purple {
+            background: linear-gradient(135deg, #7c4dff, #651fff);
+        }
+        .btn-download.purple:hover {
+            box-shadow: 0 6px 24px rgba(124, 77, 255, 0.4);
+        }
+
+        .btn-download.cyan {
+            background: linear-gradient(135deg, #00b8d4, #0097a7);
+        }
+        .btn-download.cyan:hover {
+            box-shadow: 0 6px 24px rgba(0, 229, 255, 0.4);
+        }
+
+        .btn-download.gold {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+        .btn-download.gold:hover {
+            box-shadow: 0 6px 24px rgba(255, 152, 0, 0.4);
+        }
+
+        /* ===== NOTICE BOX ===== */
+        .notice {
+            background: rgba(255, 152, 0, 0.08);
+            border: 1px solid rgba(255, 152, 0, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 30px 0;
+            text-align: center;
+            font-size: 13px;
+            color: #ffcc80;
+            line-height: 1.7;
+        }
+
+        .notice strong {
+            color: #ff9800;
+        }
+
+        /* ===== COMMENTS SECTION ===== */
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .comments-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comments-title span {
+            background: linear-gradient(135deg, #ff7357, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .comment-form {
+            background: linear-gradient(145deg, rgba(26, 26, 40, 0.9), rgba(15, 15, 25, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .comment-form input,
+        .comment-form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 15, 25, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+            margin-bottom: 12px;
+        }
+
+        .comment-form input:focus,
+        .comment-form textarea:focus {
+            border-color: rgba(255, 115, 87, 0.5);
+        }
+
+        .comment-form textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .comment-form button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff7357, #e85d3a);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .comment-form button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(255, 115, 87, 0.3);
+        }
+
+        .comment-form button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .comment-item {
+            background: linear-gradient(145deg, rgba(26, 26, 40, 0.7), rgba(15, 15, 25, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .comment-item:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .comment-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: #ff7357;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .comment-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff7357, #7c4dff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .comment-time {
+            font-size: 11px;
+            color: #555;
+        }
+
+        .comment-content {
+            font-size: 14px;
+            color: #c0c0c0;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .comments-empty {
+            text-align: center;
+            padding: 30px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .comments-loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .comment-count {
+            font-size: 12px;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .comments-more {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .comments-more button {
+            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #aaa;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .comments-more button:hover {
+            background: rgba(255, 115, 87, 0.1);
+            border-color: rgba(255, 115, 87, 0.3);
+            color: #ff7357;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 40px;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .footer-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff7357, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        /* ===== SOCIAL LINKS ===== */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: rgba(255, 115, 87, 0.1);
+            border-color: rgba(255, 115, 87, 0.3);
+            color: #ff7357;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 115, 87, 0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 115, 87, 0.5); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .card { padding: 18px; }
+            .btn-download { padding: 12px 20px; font-size: 13px; }
+            .comment-form { padding: 16px; }
+        }
+
+        /* ===== FADE IN ANIMATION ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #555;
+        }
+        .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-state p { font-size: 15px; }
+        .empty-state a {
+            color: #ff7357;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #4caf50;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            z-index: 2000;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <h1 class="header-logo" id="site-name">MOD TOOL HUB</h1>
+        <p class="header-subtitle" id="site-subtitle">Fix Lag & Optimize Gaming</p>
+        <div class="header-line"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" id="main-content">
+        <div class="comments-loading">Đang tải nội dung...</div>
+    </main>
+
+    <!-- Comments Section -->
+    <div class="container">
+        <div class="comments-section fade-in" id="comments-section">
+            <h3 class="comments-title">💬 <span>Bình Luận</span> <span class="comment-count" id="comment-count"></span></h3>
+            
+            <!-- Comment Form -->
+            <div class="comment-form">
+                <input type="text" id="comment-name" placeholder="Tên của bạn..." maxlength="30">
+                <textarea id="comment-content" placeholder="Viết bình luận của bạn... (chia sẻ trải nghiệm, góp ý, đánh giá...)" maxlength="500"></textarea>
+                <button onclick="submitComment()" id="comment-submit-btn">Gửi Bình Luận</button>
+            </div>
+
+            <!-- Comments List -->
+            <div id="comments-list">
+                <div class="comments-loading">Đang tải bình luận...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-brand" id="footer-brand">MOD TOOL HUB</div>
+        <p class="footer-text">
+            &copy; 2026 Thế Đan. All rights reserved.
+        </p>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ===== CONFIG =====
+        const API_BASE = '/api';
+        const COMMENTS_PER_PAGE = 10;
+        let allComments = [];
+        let displayedComments = 0;
+
+        // ===== HELPERS =====
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function getBtnColorClass(color) {
+            const map = { 'orange': '', 'purple': 'purple', 'cyan': 'cyan', 'gold': 'gold' };
+            return map[color] || '';
+        }
+
+        function timeAgo(dateStr) {
+            const now = new Date();
+            const date = new Date(dateStr);
+            const diff = Math.floor((now - date) / 1000);
+
+            if (diff < 60) return 'Vừa xong';
+            if (diff < 3600) return Math.floor(diff / 60) + ' phút trước';
+            if (diff < 86400) return Math.floor(diff / 3600) + ' giờ trước';
+            if (diff < 2592000) return Math.floor(diff / 86400) + ' ngày trước';
+            if (diff < 31536000) return Math.floor(diff / 2592000) + ' tháng trước';
+            return Math.floor(diff / 31536000) + ' năm trước';
+        }
+
+        function showToast(msg, color = '#4caf50') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.background = color;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // ===== LOAD CONTENT FROM API =====
+        async function loadContent() {
+            const main = document.getElementById('main-content');
+
+            try {
+                const res = await fetch(API_BASE + '/content');
+                if (!res.ok) throw new Error('API error');
+                const data = await res.json();
+                renderPage(data);
+            } catch (e) {
+                // Fallback: thử đọc từ localStorage (cho dev local)
+                try {
+                    const raw = localStorage.getItem('modtoolhub_data');
+                    if (raw) {
+                        renderPage(JSON.parse(raw));
+                        return;
+                    }
+                } catch(e2) {}
+
+                main.innerHTML = `
+                    <div class="empty-state fade-in" style="animation-delay:0.2s;">
+                        <div class="icon">🛠️</div>
+                        <p>Chưa có nội dung nào.<br>Hãy mở <a href="admin.html">Admin Panel</a> để thêm dữ liệu.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ===== RENDER PAGE =====
+        function renderPage(data) {
+            const main = document.getElementById('main-content');
+
+            // Apply settings
+            if (data && data.settings) {
+                const s = data.settings;
+                if (s.siteName) {
+                    document.getElementById('site-name').textContent = s.siteName;
+                    document.getElementById('footer-brand').textContent = s.siteName;
+                    document.title = s.siteName;
+                }
+                if (s.subtitle) {
+                    document.getElementById('site-subtitle').textContent = s.subtitle;
+                }
+            }
+
+            // Check if data exists and has sections
+            if (!data || !data.sections || data.sections.length === 0) {
+                main.innerHTML = `
+                    <div class="empty-state fade-in" style="animation-delay:0.2s;">
+                        <div class="icon">🛠️</div>
+                        <p>Chưa có nội dung nào.<br>Hãy mở <a href="admin.html">Admin Panel</a> để thêm dữ liệu.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            let animIndex = 0;
+
+            // Render sections
+            data.sections.forEach((section) => {
+                html += `
+                <div class="section-title fade-in" style="animation-delay:${animIndex * 0.1}s;">
+                    <h2>${escapeHtml(section.icon)} ${escapeHtml(section.name)}</h2>
+                </div>
+                `;
+                animIndex++;
+
+                section.cards.forEach((card) => {
+                    html += `
+                    <div class="card fade-in" style="animation-delay:${animIndex * 0.1}s;">
+                        <div class="card-title">
+                            ${escapeHtml(card.name)}
+                            ${card.badge ? '<span class="badge">' + escapeHtml(card.badge) + '</span>' : ''}
+                        </div>
+                    `;
+
+                    if (card.features && card.features.length > 0) {
+                        card.features.forEach((f) => {
+                            html += `
+                            <div class="card-feature">
+                                <span class="icon">${f.icon || ''}</span>
+                                <span>${escapeHtml(f.text)}</span>
+                            </div>
+                            `;
+                        });
+                    }
+
+                    if (card.version) {
+                        html += `
+                        <div class="card-version">
+                            🛡️ Phiên Bản: <span>${escapeHtml(card.version)}</span>
+                        </div>
+                        `;
+                    }
+
+                    if (card.description) {
+                        html += `
+                        <div class="card-description">
+                            ${escapeHtml(card.description).replace(/\n/g, '<br>')}
+                        </div>
+                        `;
+                    }
+
+                    const links = (card.downloadLinks && card.downloadLinks.length > 0)
+                        ? card.downloadLinks
+                        : (card.downloadUrl ? [{ name: 'Download', url: card.downloadUrl }] : []);
+
+                    if (links.length > 0) {
+                        html += `<div class="download-buttons">`;
+                        links.forEach((link, lIdx) => {
+                            const btnColors = ['', 'purple', 'cyan', 'gold'];
+                            const colorClass = links.length === 1
+                                ? getBtnColorClass(card.btnColor)
+                                : btnColors[lIdx % btnColors.length];
+                            html += `
+                            <a href="${escapeHtml(link.url || '#')}" class="btn-download ${colorClass}" target="_blank" rel="noopener">
+                                📥 ${escapeHtml(link.name || 'Download')}
+                            </a>
+                            `;
+                        });
+                        html += `</div>`;
+                    }
+
+                    html += `</div>`;
+                    animIndex++;
+                });
+            });
+
+            // Notice
+            const notice = (data.settings && data.settings.notice) ? data.settings.notice : '';
+            if (notice) {
+                html += `
+                <div class="notice fade-in" style="animation-delay:${animIndex * 0.1}s;">
+                    <strong>⚠️ Lưu Ý:</strong><br>
+                    ${escapeHtml(notice)}
+                </div>
+                `;
+                animIndex++;
+            }
+
+            // Social links
+            const settings = data.settings || {};
+            const hasAnySocial = settings.socialZalo || settings.socialFacebook || settings.socialTelegram;
+            if (hasAnySocial) {
+                html += `<div class="social-links fade-in" style="animation-delay:${animIndex * 0.1}s;">`;
+                if (settings.socialZalo && settings.socialZalo !== '#') {
+                    html += `<a href="${escapeHtml(settings.socialZalo)}" class="social-link" target="_blank">💬 Zalo</a>`;
+                }
+                if (settings.socialFacebook && settings.socialFacebook !== '#') {
+                    html += `<a href="${escapeHtml(settings.socialFacebook)}" class="social-link" target="_blank">🌐 Facebook</a>`;
+                }
+                if (settings.socialTelegram && settings.socialTelegram !== '#') {
+                    html += `<a href="${escapeHtml(settings.socialTelegram)}" class="social-link" target="_blank">📱 Telegram</a>`;
+                }
+                html += `</div>`;
+            }
+
+            main.innerHTML = html;
+
+            // Activate fade-in animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        }
+
+        // ===== COMMENTS =====
+        async function loadComments() {
+            const list = document.getElementById('comments-list');
+
+            try {
+                const res = await fetch(API_BASE + '/comments');
+                if (!res.ok) throw new Error('API error');
+                allComments = await res.json();
+            } catch (e) {
+                // Fallback: localStorage
+                try {
+                    const raw = localStorage.getItem('modtoolhub_comments');
+                    allComments = raw ? JSON.parse(raw) : [];
+                } catch(e2) {
+                    allComments = [];
+                }
+            }
+
+            document.getElementById('comment-count').textContent = allComments.length > 0 ? '(' + allComments.length + ')' : '';
+            displayedComments = 0;
+            list.innerHTML = '';
+            showMoreComments();
+        }
+
+        function showMoreComments() {
+            const list = document.getElementById('comments-list');
+
+            // Xoá nút "Xem thêm" cũ
+            const oldBtn = document.getElementById('comments-more-btn');
+            if (oldBtn) oldBtn.remove();
+
+            if (allComments.length === 0) {
+                list.innerHTML = '<div class="comments-empty">💬 Chưa có bình luận nào. Hãy là người đầu tiên!</div>';
+                return;
+            }
+
+            const end = Math.min(displayedComments + COMMENTS_PER_PAGE, allComments.length);
+
+            for (let i = displayedComments; i < end; i++) {
+                const c = allComments[i];
+                const initial = c.name.charAt(0).toUpperCase();
+                const el = document.createElement('div');
+                el.className = 'comment-item';
+                el.innerHTML = `
+                    <div class="comment-header">
+                        <div class="comment-name">
+                            <div class="comment-avatar">${escapeHtml(initial)}</div>
+                            ${escapeHtml(c.name)}
+                        </div>
+                        <span class="comment-time">${timeAgo(c.createdAt)}</span>
+                    </div>
+                    <div class="comment-content">${escapeHtml(c.content).replace(/\n/g, '<br>')}</div>
+                `;
+                list.appendChild(el);
+            }
+
+            displayedComments = end;
+
+            // Nút xem thêm
+            if (displayedComments < allComments.length) {
+                const moreDiv = document.createElement('div');
+                moreDiv.className = 'comments-more';
+                moreDiv.id = 'comments-more-btn';
+                moreDiv.innerHTML = `<button onclick="showMoreComments()">Xem thêm bình luận (${allComments.length - displayedComments} còn lại)</button>`;
+                list.appendChild(moreDiv);
+            }
+        }
+
+        async function submitComment() {
+            const nameInput = document.getElementById('comment-name');
+            const contentInput = document.getElementById('comment-content');
+            const btn = document.getElementById('comment-submit-btn');
+            const name = nameInput.value.trim();
+            const content = contentInput.value.trim();
+
+            if (!name) { showToast('Vui lòng nhập tên!', '#f44336'); nameInput.focus(); return; }
+            if (!content) { showToast('Vui lòng nhập nội dung bình luận!', '#f44336'); contentInput.focus(); return; }
+
+            btn.disabled = true;
+            btn.textContent = 'Đang gửi...';
+
+            try {
+                const res = await fetch(API_BASE + '/comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, content })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Lỗi gửi bình luận');
+                }
+
+                // Lưu tên để lần sau không cần nhập lại
+                localStorage.setItem('modtoolhub_commenter_name', name);
+
+                contentInput.value = '';
+                showToast('Đã gửi bình luận thành công!');
+
+                // Reload comments
+                await loadComments();
+            } catch (e) {
+                // Fallback: lưu vào localStorage
+                const comments = JSON.parse(localStorage.getItem('modtoolhub_comments') || '[]');
+                comments.unshift({
+                    id: Date.now().toString(36),
+                    name,
+                    content,
+                    createdAt: new Date().toISOString()
+                });
+                localStorage.setItem('modtoolhub_comments', JSON.stringify(comments));
+                localStorage.setItem('modtoolhub_commenter_name', name);
+
+                contentInput.value = '';
+                showToast('Đã gửi bình luận! (lưu cục bộ)');
+                await loadComments();
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Gửi Bình Luận';
+            }
+        }
+
+        // ===== PARTICLES =====
+        (function() {
+            const container = document.getElementById('particles');
+            const colors = [
+                'rgba(255, 115, 87, 0.4)',
+                'rgba(124, 77, 255, 0.3)',
+                'rgba(0, 229, 255, 0.3)',
+                'rgba(255, 64, 129, 0.3)'
+            ];
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 3 + 1) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDuration = (Math.random() * 10 + 8) + 's';
+                particle.style.animationDelay = (Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        })();
+
+        // ===== REMEMBER COMMENTER NAME =====
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('modtoolhub_commenter_name');
+            if (savedName) {
+                document.getElementById('comment-name').value = savedName;
+            }
+        });
+
+        // ===== INIT =====
+        loadContent();
+        loadComments();
+    </script>
+
+</body>
+</html>

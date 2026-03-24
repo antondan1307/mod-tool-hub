@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN - MOD TOOL HUB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0f;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER ===== */
+        .admin-header {
+            background: linear-gradient(135deg, rgba(255,115,87,0.15), rgba(124,77,255,0.15));
+            border-bottom: 1px solid rgba(255,115,87,0.2);
+            padding: 20px;
+            text-align: center;
+        }
+        .admin-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            background: linear-gradient(135deg, #ff7357, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .admin-header p {
+            color: #888; font-size: 13px; margin-top: 4px;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: rgba(26,26,40,0.9);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            overflow-x: auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 14px 16px;
+            background: none;
+            border: none;
+            color: #888;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn:hover { color: #fff; }
+        .tab-btn.active {
+            color: #ff7357;
+            border-bottom-color: #ff7357;
+            background: rgba(255,115,87,0.05);
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ===== SECTION MANAGER ===== */
+        .section-block {
+            background: rgba(26,26,40,0.9);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: rgba(255,115,87,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            cursor: pointer;
+        }
+        .section-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: #ff7357;
+        }
+        .section-body {
+            padding: 16px 20px;
+        }
+
+        /* ===== CARD ITEM IN ADMIN ===== */
+        .admin-card {
+            background: rgba(15,15,25,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .admin-card .card-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .admin-card .card-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+        }
+        .admin-card .card-actions {
+            display: flex; gap: 8px;
+        }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #aaa;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(15,15,25,0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: rgba(255,115,87,0.5);
+        }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .form-group .hint {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff7357, #e85d3a);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px rgba(255,115,87,0.3);
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+            color: #fff;
+        }
+        .btn-success:hover {
+            box-shadow: 0 4px 16px rgba(76,175,80,0.3);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            box-shadow: 0 4px 16px rgba(244,67,54,0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #aaa;
+        }
+        .btn-outline:hover {
+            border-color: #ff7357;
+            color: #ff7357;
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        .btn-purple {
+            background: linear-gradient(135deg, #7c4dff, #651fff);
+            color: #fff;
+        }
+        .btn-purple:hover {
+            box-shadow: 0 4px 16px rgba(124,77,255,0.3);
+        }
+
+        /* ===== ACTION BAR ===== */
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 16px;
+            overflow-y: auto;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal {
+            background: #1a1a28;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 560px;
+            padding: 24px;
+            position: relative;
+        }
+        .modal h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: #ff7357;
+            margin-bottom: 20px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: none; border: none;
+            color: #888; font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: #fff; }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* ===== FEATURES LIST ===== */
+        .features-list {
+            list-style: none;
+        }
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 13px;
+            color: #c0c0c0;
+        }
+        .features-list li .remove-feature {
+            margin-left: auto;
+            background: none; border: none;
+            color: #f44336; cursor: pointer;
+            font-size: 16px;
+        }
+        .add-feature-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .add-feature-row input {
+            flex: 1;
+        }
+
+        /* ===== DOWNLOAD LINKS LIST ===== */
+        .download-links-list {
+            list-style: none;
+        }
+        .download-links-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            font-size: 13px;
+            color: #c0c0c0;
+        }
+        .download-links-list li .link-name {
+            font-weight: 600;
+            color: #ff7357;
+            min-width: 80px;
+        }
+        .download-links-list li .link-url {
+            flex: 1;
+            color: #81c784;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .download-links-list li .remove-link {
+            margin-left: auto;
+            background: none; border: none;
+            color: #f44336; cursor: pointer;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .add-link-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .add-link-row input {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #4caf50;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            z-index: 2000;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ===== PREVIEW LINK ===== */
+        .preview-bar {
+            background: rgba(76,175,80,0.1);
+            border: 1px solid rgba(76,175,80,0.2);
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .preview-bar span {
+            font-size: 13px;
+            color: #81c784;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #555;
+        }
+        .empty-state .icon { font-size: 40px; margin-bottom: 10px; }
+        .empty-state p { font-size: 14px; }
+
+        /* ===== SECTION NAME EDIT ===== */
+        .section-name-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .tab-btn { padding: 12px 10px; font-size: 11px; }
+            .modal { padding: 18px; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,115,87,0.3); border-radius: 3px; }
+
+        /* ===== EXPORT/IMPORT ===== */
+        .code-block {
+            background: #0d0d15;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #81c784;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+        /* ===== LOGIN SCREEN ===== */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-box {
+            background: rgba(26,26,40,0.9);
+            border: 1px solid rgba(255,115,87,0.2);
+            border-radius: 16px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-box h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            background: linear-gradient(135deg, #ff7357, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .login-box p {
+            color: #888; font-size: 13px; margin-bottom: 24px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(15,15,25,0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            outline: none;
+            text-align: center;
+            margin-bottom: 16px;
+            transition: border-color 0.3s;
+        }
+        .login-box input:focus {
+            border-color: rgba(255,115,87,0.5);
+        }
+        .login-box button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff7357, #e85d3a);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .login-box button:hover {
+            box-shadow: 0 4px 20px rgba(255,115,87,0.3);
+            transform: translateY(-1px);
+        }
+        .login-error {
+            color: #f44336;
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+        .admin-app { display: none; }
+        .admin-app.show { display: block; }
+
+        /* ===== COMMENT MANAGEMENT ===== */
+        .comment-admin-item {
+            background: rgba(15,15,25,0.8);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .comment-admin-info {
+            flex: 1;
+        }
+        .comment-admin-name {
+            font-weight: 700;
+            font-size: 13px;
+            color: #ff7357;
+            margin-bottom: 4px;
+        }
+        .comment-admin-content {
+            font-size: 13px;
+            color: #c0c0c0;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        .comment-admin-time {
+            font-size: 11px;
+            color: #555;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== LOGIN SCREEN ===== -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-box">
+            <h1>🔒 ADMIN PANEL</h1>
+            <p>Nhập mật khẩu để truy cập</p>
+            <input type="password" id="login-password" placeholder="Mật khẩu..." autocomplete="off">
+            <button onclick="doLogin()">Đăng Nhập</button>
+            <div class="login-error" id="login-error">Sai mật khẩu! Vui lòng thử lại.</div>
+        </div>
+    </div>
+
+    <!-- ===== ADMIN APP (ẩn cho đến khi đăng nhập) ===== -->
+    <div class="admin-app" id="admin-app">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <h1>ADMIN PANEL</h1>
+        <p>Quản lý nội dung MOD TOOL HUB &nbsp;|&nbsp; <a href="#" onclick="doLogout()" style="color:#ff7357; text-decoration:none; font-weight:600;">Đăng Xuất</a></p>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('sections')">Quản Lý Section</button>
+        <button class="tab-btn" onclick="switchTab('settings')">Cài Đặt Chung</button>
+        <button class="tab-btn" onclick="switchTab('comments')">Bình Luận</button>
+        <button class="tab-btn" onclick="switchTab('export')">Xuất / Nhập</button>
+    </div>
+
+    <div class="container">
+
+        <!-- ===== TAB 1: QUAN LY SECTIONS ===== -->
+        <div class="tab-content active" id="tab-sections">
+
+            <div class="preview-bar">
+                <span>Xem trang web con (index.html) sau khi cập nhật</span>
+                <button class="btn btn-success btn-sm" onclick="openPreview()">Mở Web Con</button>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn btn-primary" onclick="openAddSection()">+ Thêm Section Mới</button>
+                <button class="btn btn-success" onclick="saveAll()">Lưu Tất Cả</button>
+            </div>
+
+            <div id="sections-container">
+                <!-- Sections will render here -->
+            </div>
+        </div>
+
+        <!-- ===== TAB 2: CAI DAT CHUNG ===== -->
+        <div class="tab-content" id="tab-settings">
+            <div class="section-block">
+                <div class="section-body">
+                    <div class="form-group">
+                        <label>Tên Website</label>
+                        <input type="text" id="site-name" placeholder="MOD TOOL HUB">
+                    </div>
+                    <div class="form-group">
+                        <label>Phụ Đề</label>
+                        <input type="text" id="site-subtitle" placeholder="Fix Lag & Optimize Gaming">
+                    </div>
+                    <div class="form-group">
+                        <label>Link Zalo</label>
+                        <input type="text" id="social-zalo" placeholder="https://zalo.me/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Link Facebook</label>
+                        <input type="text" id="social-facebook" placeholder="https://facebook.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Link Telegram</label>
+                        <input type="text" id="social-telegram" placeholder="https://t.me/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Thông báo / Lưu ý</label>
+                        <textarea id="site-notice" placeholder="Nội dung thông báo cho người dùng..."></textarea>
+                    </div>
+                    <button class="btn btn-success" onclick="saveSettings()">Lưu Cài Đặt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TAB 3: BINH LUAN ===== -->
+        <div class="tab-content" id="tab-comments">
+            <div class="section-block">
+                <div class="section-body">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+                        <h3 style="color:#ff7357; font-family:'Orbitron',sans-serif; font-size:14px;">Quản Lý Bình Luận</h3>
+                        <button class="btn btn-sm btn-outline" onclick="loadAdminComments()">Tải lại</button>
+                    </div>
+                    <div id="admin-comments-list">
+                        <p style="color:#555; font-size:13px; text-align:center; padding:20px 0;">Nhấn "Tải lại" để xem bình luận.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TAB 4: XUAT / NHAP DU LIEU ===== -->
+        <div class="tab-content" id="tab-export">
+            <div class="section-block">
+                <div class="section-body">
+                    <h3 style="color:#ff7357; margin-bottom:16px; font-family:'Orbitron',sans-serif; font-size:14px;">Xuất Dữ Liệu (Backup)</h3>
+                    <p style="font-size:13px; color:#888; margin-bottom:12px;">Copy dữ liệu này để backup hoặc chuyển sang máy khác.</p>
+                    <div class="code-block" id="export-data">Nhấn "Xuất Dữ Liệu" để xem...</div>
+                    <div style="margin-top:12px; display:flex; gap:8px;">
+                        <button class="btn btn-primary btn-sm" onclick="exportData()">Xuất Dữ Liệu</button>
+                        <button class="btn btn-outline btn-sm" onclick="copyExport()">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-block" style="margin-top:16px;">
+                <div class="section-body">
+                    <h3 style="color:#7c4dff; margin-bottom:16px; font-family:'Orbitron',sans-serif; font-size:14px;">Nhập Dữ Liệu (Restore)</h3>
+                    <p style="font-size:13px; color:#888; margin-bottom:12px;">Dán dữ liệu backup vào đây để khôi phục.</p>
+                    <div class="form-group">
+                        <textarea id="import-data" placeholder='Dán dữ liệu JSON vào đây...' style="min-height:120px; font-family:monospace; font-size:12px;"></textarea>
+                    </div>
+                    <button class="btn btn-purple btn-sm" onclick="importData()">Nhập Dữ Liệu</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div> <!-- end admin-app -->
+
+    <!-- ===== MODAL: THEM/SUA SECTION ===== -->
+    <div class="modal-overlay" id="modal-section">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('modal-section')">&times;</button>
+            <h2 id="modal-section-title">Thêm Section Mới</h2>
+            <div class="form-group">
+                <label>Tên Section</label>
+                <input type="text" id="section-name" placeholder="VD: FIX LAG NHẸ MÁY YẾU">
+            </div>
+            <div class="form-group">
+                <label>Icon Section</label>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                    <select id="section-icon" style="width:auto; min-width:160px; padding:10px 14px; font-size:16px;">
+                        <option value="">-- Không có --</option>
+                        <option value="🔥">🔥 Lửa</option>
+                        <option value="⚡">⚡ Sét</option>
+                        <option value="🎯">🎯 Mục tiêu</option>
+                        <option value="🔮">🔮 Pha lê</option>
+                        <option value="👑">👑 Vương miện</option>
+                        <option value="🚀">🚀 Tên lửa</option>
+                        <option value="💎">💎 Kim cương</option>
+                        <option value="⭐">⭐ Ngôi sao</option>
+                        <option value="🛡️">🛡️ Khiên</option>
+                        <option value="🎮">🎮 Tay cầm</option>
+                        <option value="📱">📱 Điện thoại</option>
+                        <option value="💾">💾 Đĩa mềm</option>
+                        <option value="📦">📦 Hộp</option>
+                        <option value="🔧">🔧 Cờ lê</option>
+                        <option value="⚙️">⚙️ Bánh răng</option>
+                        <option value="✅">✅ Tích xanh</option>
+                        <option value="🆕">🆕 Mới</option>
+                        <option value="🆓">🆓 Miễn phí</option>
+                        <option value="💰">💰 Tiền</option>
+                        <option value="🏆">🏆 Cúp</option>
+                    </select>
+                    <span style="font-size:11px; color:#666;">hoặc nhấn <kbd style="background:#333; padding:2px 6px; border-radius:4px; color:#ff7357;">Win + .</kbd> để mở bảng emoji</span>
+                </div>
+            </div>
+            <input type="hidden" id="section-edit-id" value="">
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-section')">Huỷ</button>
+                <button class="btn btn-primary" onclick="saveSection()">Lưu Section</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: THEM/SUA CARD ===== -->
+    <div class="modal-overlay" id="modal-card">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('modal-card')">&times;</button>
+            <h2 id="modal-card-title">Thêm Card Mới</h2>
+
+            <div class="form-group">
+                <label>Tên Card</label>
+                <input type="text" id="card-name" placeholder="VD: FIX LAG FREE FIRE 80%">
+            </div>
+
+            <div class="form-group">
+                <label>Badge (để trống nếu không cần)</label>
+                <input type="text" id="card-badge" placeholder="VD: FREE, VIP, NEW">
+            </div>
+
+            <div class="form-group">
+                <label>Màu nút Download</label>
+                <select id="card-btn-color">
+                    <option value="orange">Cam (Mặc định)</option>
+                    <option value="purple">Tím</option>
+                    <option value="cyan">Xanh Dương</option>
+                    <option value="gold">Vàng</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả file</label>
+                <textarea id="card-description" placeholder="VD: File fix lag nhẹ, xoá bớt tệp rác, tối ưu FPS..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Danh sách link tải</label>
+                <ul class="download-links-list" id="card-links-list"></ul>
+
+                <!-- Nút template nhanh -->
+                <div style="margin-top:10px; margin-bottom:8px;">
+                    <p style="font-size:11px; color:#888; margin-bottom:6px;">⚡ Thêm nhanh (chỉ cần paste URL):</p>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button type="button" class="btn btn-sm btn-outline" onclick="quickAddLink('Mediafire')">+ Mediafire</button>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="quickAddLink('Google Drive')">+ Google Drive</button>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="quickAddLink('Mega')">+ Mega</button>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="quickAddLink('Tải Nhanh')">+ Tải Nhanh</button>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="quickAddLink('Tải Thường')">+ Tải Thường</button>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="quickAddLink('Tải Dự Phòng')">+ Tải Dự Phòng</button>
+                    </div>
+                </div>
+
+                <!-- Thêm thủ công -->
+                <div class="add-link-row">
+                    <input type="text" id="new-link-name" placeholder="Tên link (VD: Tải Nhanh)" style="flex:0.4; min-width:120px;">
+                    <input type="text" id="new-link-url" placeholder="URL (VD: https://...)" style="flex:1;">
+                    <button class="btn btn-sm btn-primary" onclick="addLinkToList()">+</button>
+                </div>
+
+                <!-- Nhập hàng loạt -->
+                <details style="margin-top:10px;">
+                    <summary style="font-size:12px; color:#7c4dff; cursor:pointer; user-select:none;">📋 Nhập hàng loạt (Bulk paste)</summary>
+                    <div style="margin-top:8px;">
+                        <textarea id="bulk-links-input" placeholder="Mỗi dòng 1 link, format:&#10;Tên link | URL&#10;&#10;Ví dụ:&#10;Tải Nhanh | https://mediafire.com/abc&#10;Google Drive | https://drive.google.com/xyz&#10;Mega | https://mega.nz/123" style="width:100%; min-height:100px; padding:10px 14px; background:rgba(15,15,25,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#e0e0e0; font-family:'Inter',sans-serif; font-size:13px; resize:vertical;"></textarea>
+                        <button class="btn btn-sm btn-purple" onclick="bulkAddLinks()" style="margin-top:6px;">Thêm tất cả</button>
+                    </div>
+                </details>
+
+                <p class="hint" style="margin-top:6px;">Có thể thêm nhiều link tải (Google Drive, Mediafire, Tải Nhanh, Tải Thường...)</p>
+            </div>
+
+            <div class="form-group">
+                <label>Phiên Bản</label>
+                <input type="text" id="card-version" placeholder="VD: Free Fire, Free Fire Max">
+            </div>
+
+            <div class="form-group">
+                <label>Danh sách tính năng</label>
+                <ul class="features-list" id="card-features-list"></ul>
+                <div class="add-feature-row">
+                    <select id="feature-icon-select" style="width:60px; padding:8px;">
+                        <option value="&#x1F3AF;">&#x1F3AF;</option>
+                        <option value="&#x1F5D1;&#xFE0F;">&#x1F5D1;&#xFE0F;</option>
+                        <option value="&#x1F451;">&#x1F451;</option>
+                        <option value="&#x1F680;">&#x1F680;</option>
+                        <option value="&#x1F52E;">&#x1F52E;</option>
+                        <option value="&#x2B50;">&#x2B50;</option>
+                        <option value="&#x26A1;">&#x26A1;</option>
+                        <option value="&#x2705;">&#x2705;</option>
+                    </select>
+                    <input type="text" id="new-feature-text" placeholder="Nhập tính năng..." style="flex:1;">
+                    <button class="btn btn-sm btn-primary" onclick="addFeatureToList()">+</button>
+                </div>
+            </div>
+
+            <input type="hidden" id="card-edit-section-id" value="">
+            <input type="hidden" id="card-edit-id" value="">
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-card')">Huỷ</button>
+                <button class="btn btn-primary" onclick="saveCard()">Lưu Card</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ===== CONFIG =====
+        const API_BASE = '/api';
+        const STORAGE_KEY = 'modtoolhub_data';
+        let adminToken = sessionStorage.getItem('admin_token') || '';
+
+        // ===== LOGIN =====
+        async function doLogin() {
+            const password = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+
+            try {
+                const res = await fetch(API_BASE + '/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    adminToken = data.token;
+                    sessionStorage.setItem('admin_token', adminToken);
+                    showAdminApp();
+                } else {
+                    errorEl.style.display = 'block';
+                }
+            } catch (e) {
+                // Fallback: mật khẩu mặc định khi chạy local
+                if (password === 'admin123') {
+                    adminToken = password;
+                    sessionStorage.setItem('admin_token', adminToken);
+                    showAdminApp();
+                } else {
+                    errorEl.style.display = 'block';
+                }
+            }
+        }
+
+        function doLogout() {
+            adminToken = '';
+            sessionStorage.removeItem('admin_token');
+            document.getElementById('admin-app').classList.remove('show');
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error').style.display = 'none';
+        }
+
+        function showAdminApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-app').classList.add('show');
+            init();
+        }
+
+        // Auto-login nếu đã có token
+        document.getElementById('login-password').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') doLogin();
+        });
+
+        if (adminToken) {
+            showAdminApp();
+        }
+
+        // ===== DATA STORE =====
+        function getDefaultData() {
+            return {
+                settings: {
+                    siteName: 'MOD TOOL HUB',
+                    subtitle: 'Fix Lag & Optimize Gaming',
+                    socialZalo: '#',
+                    socialFacebook: '#',
+                    socialTelegram: '#',
+                    notice: 'Tất cả các file đều KHÔNG KHOÁ NICK. Hãy sử dụng đúng hướng dẫn.'
+                },
+                sections: []
+            };
+        }
+
+        async function loadDataFromAPI() {
+            try {
+                const res = await fetch(API_BASE + '/content');
+                if (res.ok) return await res.json();
+            } catch(e) {}
+            // Fallback localStorage
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) return JSON.parse(raw);
+            } catch(e) {}
+            return getDefaultData();
+        }
+
+        async function saveData(data) {
+            // Lưu localStorage luôn (cho dev local & fallback)
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+            // Gọi API
+            try {
+                const res = await fetch(API_BASE + '/content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + adminToken
+                    },
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    console.warn('API save failed:', err);
+                }
+            } catch(e) {
+                console.warn('API unavailable, saved to localStorage only');
+            }
+        }
+
+        let appData = getDefaultData();
+
+        // ===== INIT =====
+        async function init() {
+            appData = await loadDataFromAPI();
+            renderSections();
+            loadSettings();
+        }
+
+        // ===== TABS =====
+        function switchTab(name) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+
+            const tabMap = { 'sections': 0, 'settings': 1, 'comments': 2, 'export': 3 };
+            const idx = tabMap[name] || 0;
+            document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+            document.getElementById('tab-' + name).classList.add('active');
+
+            if (name === 'comments') loadAdminComments();
+        }
+
+        // ===== RENDER SECTIONS =====
+        function renderSections() {
+            const container = document.getElementById('sections-container');
+
+            if (appData.sections.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">&#x1F4E6;</div>
+                        <p>Chưa có section nào. Nhấn "Thêm Section Mới" để bắt đầu!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            appData.sections.forEach((section, sIdx) => {
+                html += `
+                <div class="section-block">
+                    <div class="section-header">
+                        <div class="section-name-row">
+                            <h3>${section.icon || ''} ${section.name}</h3>
+                        </div>
+                        <div class="section-actions">
+                            <button class="btn btn-sm btn-outline" onclick="openEditSection(${sIdx})">Sửa</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteSection(${sIdx})">Xoá</button>
+                        </div>
+                    </div>
+                    <div class="section-body">
+                `;
+
+                if (section.cards.length === 0) {
+                    html += `<p style="color:#555; font-size:13px; text-align:center; padding:20px 0;">Chưa có card nào trong section này.</p>`;
+                }
+
+                section.cards.forEach((card, cIdx) => {
+                    html += `
+                    <div class="admin-card">
+                        <div class="card-header-row">
+                            <span class="card-name">${card.name}</span>
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-outline" onclick="openEditCard(${sIdx}, ${cIdx})">Sửa</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteCard(${sIdx}, ${cIdx})">Xoá</button>
+                            </div>
+                        </div>
+                        <div style="font-size:12px; color:#888;">
+                            ${card.features.length} tính năng | Phiên bản: ${card.version || 'N/A'} | 
+                            Link tải: ${(card.downloadLinks && card.downloadLinks.length > 0) ? '<span style="color:#4caf50;">' + card.downloadLinks.length + ' link</span>' : (card.downloadUrl ? '<span style="color:#4caf50;">1 link</span>' : '<span style="color:#f44336;">Chưa có</span>')}
+                            ${card.badge ? ' | Badge: <span style="color:#ff7357;">' + card.badge + '</span>' : ''}
+                        </div>
+                        ${card.description ? '<div style="font-size:11px; color:#666; margin-top:6px; line-height:1.5;">' + card.description.substring(0, 100) + (card.description.length > 100 ? '...' : '') + '</div>' : ''}
+                    </div>
+                    `;
+                });
+
+                html += `
+                        <button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="openAddCard(${sIdx})">+ Thêm Card</button>
+                    </div>
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ===== SECTION CRUD =====
+        function openAddSection() {
+            document.getElementById('modal-section-title').textContent = 'Thêm Section Mới';
+            document.getElementById('section-name').value = '';
+            document.getElementById('section-icon').value = '';
+            document.getElementById('section-edit-id').value = '';
+            openModal('modal-section');
+        }
+
+        function openEditSection(idx) {
+            const s = appData.sections[idx];
+            document.getElementById('modal-section-title').textContent = 'Sửa Section';
+            document.getElementById('section-name').value = s.name;
+            // Set icon - nếu icon không có trong danh sách, thêm option mới
+            const iconSelect = document.getElementById('section-icon');
+            const iconVal = s.icon || '';
+            let found = false;
+            for (let opt of iconSelect.options) {
+                if (opt.value === iconVal) { found = true; break; }
+            }
+            if (!found && iconVal) {
+                const newOpt = document.createElement('option');
+                newOpt.value = iconVal;
+                newOpt.textContent = iconVal + ' (tuỳ chỉnh)';
+                iconSelect.appendChild(newOpt);
+            }
+            iconSelect.value = iconVal;
+            document.getElementById('section-edit-id').value = idx;
+            openModal('modal-section');
+        }
+
+        async function saveSection() {
+            const name = document.getElementById('section-name').value.trim();
+            const icon = document.getElementById('section-icon').value.trim();
+            const editId = document.getElementById('section-edit-id').value;
+
+            if (!name) { showToast('Vui lòng nhập tên section!', '#f44336'); return; }
+
+            if (editId !== '') {
+                appData.sections[parseInt(editId)].name = name;
+                appData.sections[parseInt(editId)].icon = icon;
+            } else {
+                appData.sections.push({
+                    name: name,
+                    icon: icon,
+                    cards: []
+                });
+            }
+
+            await saveData(appData);
+            renderSections();
+            closeModal('modal-section');
+            showToast('Đã lưu section!');
+        }
+
+        async function deleteSection(idx) {
+            if (!confirm('Bạn có chắc muốn xoá section "' + appData.sections[idx].name + '"? Tất cả card trong section cũng sẽ bị xoá!')) return;
+            appData.sections.splice(idx, 1);
+            await saveData(appData);
+            renderSections();
+            showToast('Đã xoá section!', '#f44336');
+        }
+
+        // ===== CARD CRUD =====
+        let tempFeatures = [];
+        let tempLinks = [];
+
+        function openAddCard(sectionIdx) {
+            document.getElementById('modal-card-title').textContent = 'Thêm Card Mới';
+            document.getElementById('card-name').value = '';
+            document.getElementById('card-badge').value = '';
+            document.getElementById('card-btn-color').value = 'orange';
+            document.getElementById('card-description').value = '';
+            document.getElementById('card-version').value = '';
+            document.getElementById('card-edit-section-id').value = sectionIdx;
+            document.getElementById('card-edit-id').value = '';
+            tempFeatures = [];
+            tempLinks = [];
+            renderFeaturesList();
+            renderLinksList();
+            openModal('modal-card');
+        }
+
+        function openEditCard(sectionIdx, cardIdx) {
+            const card = appData.sections[sectionIdx].cards[cardIdx];
+            document.getElementById('modal-card-title').textContent = 'Sửa Card';
+            document.getElementById('card-name').value = card.name;
+            document.getElementById('card-badge').value = card.badge || '';
+            document.getElementById('card-btn-color').value = card.btnColor || 'orange';
+            document.getElementById('card-description').value = card.description || '';
+            document.getElementById('card-version').value = card.version || '';
+            document.getElementById('card-edit-section-id').value = sectionIdx;
+            document.getElementById('card-edit-id').value = cardIdx;
+            tempFeatures = card.features ? card.features.map(f => ({...f})) : [];
+            tempLinks = card.downloadLinks ? card.downloadLinks.map(l => ({...l})) : [];
+            // Hỗ trợ dữ liệu cũ (1 link duy nhất)
+            if (tempLinks.length === 0 && card.downloadUrl) {
+                tempLinks.push({ name: 'Download', url: card.downloadUrl });
+            }
+            renderFeaturesList();
+            renderLinksList();
+            openModal('modal-card');
+        }
+
+        async function saveCard() {
+            const name = document.getElementById('card-name').value.trim();
+            const badge = document.getElementById('card-badge').value.trim();
+            const btnColor = document.getElementById('card-btn-color').value;
+            const description = document.getElementById('card-description').value.trim();
+            const version = document.getElementById('card-version').value.trim();
+            const sectionIdx = parseInt(document.getElementById('card-edit-section-id').value);
+            const editId = document.getElementById('card-edit-id').value;
+
+            if (!name) { showToast('Vui lòng nhập tên card!', '#f44336'); return; }
+
+            const cardObj = {
+                name, badge, btnColor, description, version,
+                features: [...tempFeatures],
+                downloadLinks: [...tempLinks],
+                downloadUrl: tempLinks.length > 0 ? tempLinks[0].url : ''
+            };
+
+            if (editId !== '') {
+                appData.sections[sectionIdx].cards[parseInt(editId)] = cardObj;
+            } else {
+                appData.sections[sectionIdx].cards.push(cardObj);
+            }
+
+            await saveData(appData);
+            renderSections();
+            closeModal('modal-card');
+            showToast('Đã lưu card!');
+        }
+
+        async function deleteCard(sectionIdx, cardIdx) {
+            if (!confirm('Bạn có chắc muốn xoá card này?')) return;
+            appData.sections[sectionIdx].cards.splice(cardIdx, 1);
+            await saveData(appData);
+            renderSections();
+            showToast('Đã xoá card!', '#f44336');
+        }
+
+        // ===== FEATURES LIST =====
+        function renderFeaturesList() {
+            const list = document.getElementById('card-features-list');
+            if (tempFeatures.length === 0) {
+                list.innerHTML = '<li style="color:#555;">Chưa có tính năng nào.</li>';
+                return;
+            }
+            list.innerHTML = tempFeatures.map((f, i) => `
+                <li>
+                    <span>${f.icon}</span>
+                    <span>${f.text}</span>
+                    <button class="remove-feature" onclick="removeFeature(${i})">&times;</button>
+                </li>
+            `).join('');
+        }
+
+        function addFeatureToList() {
+            const icon = document.getElementById('feature-icon-select').value;
+            const text = document.getElementById('new-feature-text').value.trim();
+            if (!text) return;
+
+            tempFeatures.push({ icon, text });
+            document.getElementById('new-feature-text').value = '';
+            renderFeaturesList();
+        }
+
+        // Enter key to add feature
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('new-feature-text').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); addFeatureToList(); }
+            });
+            document.getElementById('new-link-url').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); addLinkToList(); }
+            });
+        });
+
+        function removeFeature(idx) {
+            tempFeatures.splice(idx, 1);
+            renderFeaturesList();
+        }
+
+        // ===== DOWNLOAD LINKS LIST =====
+        function renderLinksList() {
+            const list = document.getElementById('card-links-list');
+            if (tempLinks.length === 0) {
+                list.innerHTML = '<li style="color:#555; border:none; background:none; padding:4px 0;">Chưa có link tải nào.</li>';
+                return;
+            }
+            list.innerHTML = tempLinks.map((l, i) => `
+                <li>
+                    <span class="link-name">${l.name}</span>
+                    <span class="link-url">${l.url}</span>
+                    <button class="remove-link" onclick="removeLink(${i})">&times;</button>
+                </li>
+            `).join('');
+        }
+
+        function addLinkToList() {
+            const name = document.getElementById('new-link-name').value.trim();
+            const url = document.getElementById('new-link-url').value.trim();
+            if (!name || !url) {
+                showToast('Vui lòng nhập tên link và URL!', '#f44336');
+                return;
+            }
+            tempLinks.push({ name, url });
+            document.getElementById('new-link-name').value = '';
+            document.getElementById('new-link-url').value = '';
+            renderLinksList();
+        }
+
+        function removeLink(idx) {
+            tempLinks.splice(idx, 1);
+            renderLinksList();
+        }
+
+        // ===== QUICK ADD LINK (Template nhanh) =====
+        function quickAddLink(templateName) {
+            const url = prompt('Dán URL cho "' + templateName + '":');
+            if (!url || !url.trim()) return;
+            tempLinks.push({ name: templateName, url: url.trim() });
+            renderLinksList();
+            showToast('Đã thêm link "' + templateName + '"!');
+        }
+
+        // ===== BULK ADD LINKS =====
+        function bulkAddLinks() {
+            const raw = document.getElementById('bulk-links-input').value.trim();
+            if (!raw) { showToast('Vui lòng nhập dữ liệu!', '#f44336'); return; }
+
+            const lines = raw.split('\n').filter(l => l.trim());
+            let count = 0;
+            lines.forEach(line => {
+                // Hỗ trợ format: "Tên | URL" hoặc chỉ "URL" (auto đặt tên)
+                if (line.includes('|')) {
+                    const parts = line.split('|');
+                    const name = parts[0].trim();
+                    const url = parts.slice(1).join('|').trim();
+                    if (name && url) {
+                        tempLinks.push({ name, url });
+                        count++;
+                    }
+                } else {
+                    // Chỉ có URL, tự đặt tên dựa trên domain
+                    const url = line.trim();
+                    if (url.startsWith('http')) {
+                        let name = 'Download';
+                        if (url.includes('mediafire')) name = 'Mediafire';
+                        else if (url.includes('drive.google')) name = 'Google Drive';
+                        else if (url.includes('mega.nz') || url.includes('mega.co')) name = 'Mega';
+                        else if (url.includes('dropbox')) name = 'Dropbox';
+                        else if (url.includes('fshare')) name = 'Fshare';
+                        else if (url.includes('terabox')) name = 'Terabox';
+                        tempLinks.push({ name, url });
+                        count++;
+                    }
+                }
+            });
+
+            if (count > 0) {
+                renderLinksList();
+                document.getElementById('bulk-links-input').value = '';
+                showToast('Đã thêm ' + count + ' link!');
+            } else {
+                showToast('Không tìm thấy link hợp lệ!', '#f44336');
+            }
+        }
+
+        // ===== SETTINGS =====
+        function loadSettings() {
+            const s = appData.settings || {};
+            document.getElementById('site-name').value = s.siteName || '';
+            document.getElementById('site-subtitle').value = s.subtitle || '';
+            document.getElementById('social-zalo').value = s.socialZalo || '';
+            document.getElementById('social-facebook').value = s.socialFacebook || '';
+            document.getElementById('social-telegram').value = s.socialTelegram || '';
+            document.getElementById('site-notice').value = s.notice || '';
+        }
+
+        async function saveSettings() {
+            appData.settings = {
+                siteName: document.getElementById('site-name').value.trim(),
+                subtitle: document.getElementById('site-subtitle').value.trim(),
+                socialZalo: document.getElementById('social-zalo').value.trim(),
+                socialFacebook: document.getElementById('social-facebook').value.trim(),
+                socialTelegram: document.getElementById('social-telegram').value.trim(),
+                notice: document.getElementById('site-notice').value.trim()
+            };
+            await saveData(appData);
+            showToast('Đã lưu cài đặt!');
+        }
+
+        // ===== EXPORT / IMPORT =====
+        function exportData() {
+            const json = JSON.stringify(appData, null, 2);
+            document.getElementById('export-data').textContent = json;
+        }
+
+        function copyExport() {
+            const text = document.getElementById('export-data').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Đã copy vào clipboard!');
+            }).catch(() => {
+                showToast('Không thể copy. Hãy chọn thủ công.', '#f44336');
+            });
+        }
+
+        async function importData() {
+            const raw = document.getElementById('import-data').value.trim();
+            if (!raw) { showToast('Vui lòng dán dữ liệu vào!', '#f44336'); return; }
+            try {
+                const data = JSON.parse(raw);
+                if (!data.sections) throw new Error('Invalid');
+                appData = data;
+                await saveData(appData);
+                renderSections();
+                loadSettings();
+                showToast('Đã nhập dữ liệu thành công!');
+                document.getElementById('import-data').value = '';
+            } catch(e) {
+                showToast('Dữ liệu không hợp lệ! Kiểm tra lại JSON.', '#f44336');
+            }
+        }
+
+        // ===== SAVE ALL =====
+        async function saveAll() {
+            await saveData(appData);
+            showToast('Đã lưu tất cả dữ liệu!');
+        }
+
+        // ===== ADMIN COMMENTS =====
+        async function loadAdminComments() {
+            const container = document.getElementById('admin-comments-list');
+            container.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">Đang tải...</p>';
+
+            let comments = [];
+            try {
+                const res = await fetch(API_BASE + '/comments');
+                if (res.ok) comments = await res.json();
+            } catch(e) {
+                try {
+                    comments = JSON.parse(localStorage.getItem('modtoolhub_comments') || '[]');
+                } catch(e2) {}
+            }
+
+            if (comments.length === 0) {
+                container.innerHTML = '<p style="color:#555; text-align:center; padding:20px;">Chưa có bình luận nào.</p>';
+                return;
+            }
+
+            container.innerHTML = comments.map(c => `
+                <div class="comment-admin-item">
+                    <div class="comment-admin-info">
+                        <div class="comment-admin-name">${escapeHtml(c.name)}</div>
+                        <div class="comment-admin-content">${escapeHtml(c.content)}</div>
+                        <div class="comment-admin-time">${c.createdAt ? new Date(c.createdAt).toLocaleString('vi-VN') : ''}</div>
+                    </div>
+                    <button class="btn btn-sm btn-danger" onclick="deleteComment('${c.id}')">Xoá</button>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm('Xoá bình luận này?')) return;
+
+            try {
+                const res = await fetch(API_BASE + '/comments', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + adminToken
+                    },
+                    body: JSON.stringify({ commentId })
+                });
+
+                if (res.ok) {
+                    showToast('Đã xoá bình luận!');
+                    loadAdminComments();
+                } else {
+                    const err = await res.json();
+                    showToast(err.error || 'Lỗi xoá bình luận!', '#f44336');
+                }
+            } catch(e) {
+                // Fallback: xoá trong localStorage
+                let comments = JSON.parse(localStorage.getItem('modtoolhub_comments') || '[]');
+                comments = comments.filter(c => c.id !== commentId);
+                localStorage.setItem('modtoolhub_comments', JSON.stringify(comments));
+                showToast('Đã xoá bình luận!');
+                loadAdminComments();
+            }
+        }
+
+        // ===== MODAL =====
+        function openModal(id) {
+            document.getElementById(id).classList.add('show');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        // ===== TOAST =====
+        function showToast(msg, color = '#4caf50') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.background = color;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // ===== PREVIEW =====
+        function openPreview() {
+            window.open('index.html', '_blank');
+        }
+
+        // ===== START (init is called from showAdminApp) =====
+    </script>
+
+</body>
+</html>
