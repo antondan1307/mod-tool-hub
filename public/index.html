@@ -493,6 +493,87 @@
             word-break: break-word;
         }
 
+        .comment-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .comment-actions button {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #888;
+            font-size: 11px;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .comment-actions button:hover {
+            border-color: #ff7357;
+            color: #ff7357;
+        }
+
+        .comment-actions button.delete-btn:hover {
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        .comment-edited {
+            font-size: 11px;
+            color: #555;
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        .comment-edit-form {
+            margin-top: 8px;
+        }
+
+        .comment-edit-form textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(15, 15, 25, 0.9);
+            border: 1px solid rgba(255, 115, 87, 0.3);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            resize: vertical;
+            min-height: 60px;
+            margin-bottom: 8px;
+        }
+
+        .comment-edit-form .edit-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .comment-edit-form button {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .comment-edit-form .save-btn {
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+            color: #fff;
+        }
+
+        .comment-edit-form .cancel-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+        }
+
         .comments-empty {
             text-align: center;
             padding: 30px;
@@ -957,8 +1038,10 @@
             for (let i = displayedComments; i < end; i++) {
                 const c = allComments[i];
                 const initial = c.name.charAt(0).toUpperCase();
+                const hasToken = !!localStorage.getItem('modtoolhub_edit_' + c.id);
                 const el = document.createElement('div');
                 el.className = 'comment-item';
+                el.id = 'comment-' + c.id;
                 el.innerHTML = `
                     <div class="comment-header">
                         <div class="comment-name">
@@ -967,7 +1050,13 @@
                         </div>
                         <span class="comment-time">${timeAgo(c.createdAt)}</span>
                     </div>
-                    <div class="comment-content">${escapeHtml(c.content).replace(/\n/g, '<br>')}</div>
+                    <div class="comment-content" id="comment-content-${c.id}">${escapeHtml(c.content).replace(/\n/g, '<br>')}</div>
+                    ${c.editedAt ? '<div class="comment-edited">✏️ đã chỉnh sửa</div>' : ''}
+                    ${hasToken ? `
+                    <div class="comment-actions" id="comment-actions-${c.id}">
+                        <button onclick="editComment('${c.id}')">✏️ Sửa</button>
+                        <button class="delete-btn" onclick="deleteComment('${c.id}')">🗑️ Xoá</button>
+                    </div>` : ''}
                 `;
                 list.appendChild(el);
             }
@@ -1009,6 +1098,13 @@
                     throw new Error(err.error || 'Lỗi gửi bình luận');
                 }
 
+                const result = await res.json();
+
+                // Lưu editToken để có thể sửa/xoá bình luận của mình
+                if (result.comment && result.comment.editToken) {
+                    localStorage.setItem('modtoolhub_edit_' + result.comment.id, result.comment.editToken);
+                }
+
                 // Lưu tên để lần sau không cần nhập lại
                 localStorage.setItem('modtoolhub_commenter_name', name);
 
@@ -1035,6 +1131,130 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Gửi Bình Luận';
+            }
+        }
+
+        // ===== EDIT COMMENT =====
+        function editComment(commentId) {
+            const comment = allComments.find(c => c.id === commentId);
+            if (!comment) return;
+
+            const contentEl = document.getElementById('comment-content-' + commentId);
+            const actionsEl = document.getElementById('comment-actions-' + commentId);
+            if (!contentEl) return;
+
+            // Lưu nội dung gốc để cancel
+            contentEl.dataset.originalContent = comment.content;
+
+            // Thay nội dung bằng form chỉnh sửa
+            contentEl.style.display = 'none';
+
+            // Xoá form cũ nếu có
+            const oldForm = document.getElementById('edit-form-' + commentId);
+            if (oldForm) oldForm.remove();
+
+            const editForm = document.createElement('div');
+            editForm.className = 'comment-edit-form';
+            editForm.id = 'edit-form-' + commentId;
+            editForm.innerHTML = `
+                <textarea id="edit-textarea-${commentId}" maxlength="500">${escapeHtml(comment.content)}</textarea>
+                <div class="edit-buttons">
+                    <button class="save-btn" onclick="saveEditComment('${commentId}')">💾 Lưu</button>
+                    <button class="cancel-btn" onclick="cancelEditComment('${commentId}')">Huỷ</button>
+                </div>
+            `;
+            contentEl.parentNode.insertBefore(editForm, contentEl.nextSibling);
+
+            // Ẩn nút actions
+            if (actionsEl) actionsEl.style.display = 'none';
+
+            // Focus vào textarea
+            const textarea = document.getElementById('edit-textarea-' + commentId);
+            if (textarea) {
+                textarea.focus();
+                textarea.selectionStart = textarea.value.length;
+            }
+        }
+
+        async function saveEditComment(commentId) {
+            const textarea = document.getElementById('edit-textarea-' + commentId);
+            if (!textarea) return;
+
+            const newContent = textarea.value.trim();
+            if (!newContent) {
+                showToast('Nội dung không được để trống!', '#f44336');
+                return;
+            }
+
+            const editToken = localStorage.getItem('modtoolhub_edit_' + commentId);
+            if (!editToken) {
+                showToast('Không có quyền sửa bình luận này!', '#f44336');
+                return;
+            }
+
+            // Disable buttons
+            const form = document.getElementById('edit-form-' + commentId);
+            const buttons = form ? form.querySelectorAll('button') : [];
+            buttons.forEach(b => b.disabled = true);
+
+            try {
+                const res = await fetch(API_BASE + '/comments', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ commentId, content: newContent, editToken })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Lỗi sửa bình luận');
+                }
+
+                showToast('Đã sửa bình luận thành công!');
+                await loadComments();
+            } catch (e) {
+                showToast(e.message || 'Lỗi khi sửa bình luận!', '#f44336');
+                buttons.forEach(b => b.disabled = false);
+            }
+        }
+
+        function cancelEditComment(commentId) {
+            const contentEl = document.getElementById('comment-content-' + commentId);
+            const actionsEl = document.getElementById('comment-actions-' + commentId);
+            const editForm = document.getElementById('edit-form-' + commentId);
+
+            if (editForm) editForm.remove();
+            if (contentEl) contentEl.style.display = '';
+            if (actionsEl) actionsEl.style.display = '';
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm('Bạn có chắc muốn xoá bình luận này?')) return;
+
+            const editToken = localStorage.getItem('modtoolhub_edit_' + commentId);
+            if (!editToken) {
+                showToast('Không có quyền xoá bình luận này!', '#f44336');
+                return;
+            }
+
+            try {
+                const res = await fetch(API_BASE + '/comments', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ commentId, editToken })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Lỗi xoá bình luận');
+                }
+
+                // Xoá editToken khỏi localStorage
+                localStorage.removeItem('modtoolhub_edit_' + commentId);
+
+                showToast('Đã xoá bình luận!');
+                await loadComments();
+            } catch (e) {
+                showToast(e.message || 'Lỗi khi xoá bình luận!', '#f44336');
             }
         }
 
